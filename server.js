@@ -52,7 +52,7 @@ app.get("/test/:recipeId/:comentarioId", (req, res, next) => {
 })
 
 // rutas de CRUD para artistas
-const Artist = require("./models/Artist.model")
+const Artist = require("./models/Artist.model");
 
 // Ruta para crear Artistas
 app.post("/artist", (req, res) => {
@@ -134,8 +134,7 @@ app.patch("/artist/:artistId/awards-won", async (req, res) => {
   console.log(req.params)
   console.log(req.body)
 
-  try {
-    
+  try { 
     const responseFromDB = await Artist.findByIdAndUpdate( req.params.artistId, {
       awardsWon: req.body.awardsWon
     }, {new: true} )
@@ -145,9 +144,53 @@ app.patch("/artist/:artistId/awards-won", async (req, res) => {
   } catch (error) {
     console.log(error)
   }
+})
 
+// Rutas de canciones
+const Song = require("./models/Song.model");
+
+// Ruta para crear canciones
+app.post("/song", async (req, res) => {
+
+  console.log(req.body)
+
+  try {
+    
+    await Song.create({
+      title: req.body.title,
+      releaseDate: req.body.releaseDate,
+      artist: req.body.artist
+    })
+
+    res.send("cancion creada")
+
+  } catch (error) {
+    console.log(error)
+  }
+
+})
+
+
+// Ver detalles de una cancion
+app.get("/song/:songId", async (req, res) => {
+  console.log(req.params)
+
+  try {
+
+    const songDetails = await Song
+    .findById( req.params.songId )
+    .populate("artist")
+    
+    console.log(songDetails.artist)
+    // NO ES NECESARIO
+    // const artistDetails = await Artist.findById( songDetails.artist )
+
+    res.json(songDetails)
+
+  } catch (error) {
+    console.log(error)
+  }
   
-
 })
 
 // server listen & PORT

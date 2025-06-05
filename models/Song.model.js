@@ -9,7 +9,11 @@ const songSchema = new Schema({
   artist: {
     type: Schema.Types.ObjectId,
     ref: "Artist"// ref viene de referencia y es la que apunta a la colección donde está ubicado este id
-  } 
+  },
+  collaboratingArtists: {
+    type: [Schema.Types.ObjectId],
+    ref: "Artist"
+  }
 })
 
 const Song = model("Song", songSchema)
